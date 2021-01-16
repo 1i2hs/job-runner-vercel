@@ -1,4 +1,4 @@
-import playwright from "playwright-aws-lambda";
+import * as playwright from "playwright-aws-lambda";
 import { sendTelegramMessage } from "../commons/sendTelegramMessage";
 
 process.on("unhandledRejection", (error) => {
