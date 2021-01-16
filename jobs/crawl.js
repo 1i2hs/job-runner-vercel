@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+const { chromium } = require("playwright");
 import { sendTelegramMessage } from "../commons/sendTelegramMessage";
 
 process.on("unhandledRejection", (error) => {
@@ -12,11 +12,11 @@ async function start(title, description = "Data Found", { address, selector }) {
   console.log(`- A CSS selector is "${selector}"`);
   console.log(`- Start extracting data`);
 
-  const browser = await puppeteer.launch();
+  const browser = await chromium.launch();
   const page = await browser.newPage();
   await page.goto(address);
 
-  await page.waitForSelector(selector);
+  await page.waitForSelector(selector, { state: "attached" });
 
   const value = await page.$eval(selector, (el) => el.textContent);
   console.log(`- Found data: ${value}`);
@@ -34,6 +34,4 @@ async function start(title, description = "Data Found", { address, selector }) {
   return;
 }
 
-export {
-  start
-}
+export { start };
