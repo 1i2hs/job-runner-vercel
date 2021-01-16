@@ -26,6 +26,7 @@ export default async (req, res) => {
     });
     return;
   } catch (error) {
+    console.log(error);
     res.statusCode = 500;
     res.json({
       msg: "Could not execute a job due to an internal errors",
