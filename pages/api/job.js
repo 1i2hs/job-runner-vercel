@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { crawl } from "./jobs";
+import { crawl } from "../../jobs";
 
 export default async (req, res) => {
   try {
