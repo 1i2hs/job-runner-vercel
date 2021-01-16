@@ -1,4 +1,4 @@
-const { chromium } = require("playwright");
+import playwright from "playwright-aws-lambda";
 import { sendTelegramMessage } from "../commons/sendTelegramMessage";
 
 process.on("unhandledRejection", (error) => {
@@ -12,7 +12,7 @@ async function start(title, description = "Data Found", { address, selector }) {
   console.log(`- A CSS selector is "${selector}"`);
   console.log(`- Start extracting data`);
 
-  const browser = await chromium.launch();
+  const browser = await playwright.launchChromium({ headless: true });
   const page = await browser.newPage();
   await page.goto(address);
 
