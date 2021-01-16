@@ -1,4 +1,5 @@
-import * as playwright from "playwright-aws-lambda";
+import { JSDOM } from "jsdom";
+import axios from "axios";
 import { sendTelegramMessage } from "../commons/sendTelegramMessage";
 
 process.on("unhandledRejection", (error) => {
@@ -12,13 +13,10 @@ async function start(title, description = "Data Found", { address, selector }) {
   console.log(`- A CSS selector is "${selector}"`);
   console.log(`- Start extracting data`);
 
-  const browser = await playwright.launchChromium({ headless: true });
-  const page = await browser.newPage();
-  await page.goto(address);
+  const { data } = await axios.get(address);
+  const dom = new JSDOM(data);
+  const value = dom.window.document.querySelector(selector).textContent;
 
-  await page.waitForSelector(selector, { state: "attached" });
-
-  const value = await page.$eval(selector, (el) => el.textContent);
   console.log(`- Found data: ${value}`);
   console.log(`- Done extracting data`);
   console.log(`- Sending notification using Telegram Bot`);
@@ -29,8 +27,6 @@ async function start(title, description = "Data Found", { address, selector }) {
     console.log(`- Failed to send notification to the Telegram Bot`);
     process.exit(1);
   }
-
-  browser.disconnect();
   return;
 }
 
